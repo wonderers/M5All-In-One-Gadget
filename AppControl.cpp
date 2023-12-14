@@ -359,7 +359,6 @@ void AppControl::displayHighAndLowRecord() {
 void AppControl::controlApplication() {
   bool music_stop_state = false;
   int high_and_low_title_state=2;
-  bool high_and_low_onemore= false;
   mmplay.init();
 
   while (1) {
@@ -850,12 +849,12 @@ void AppControl::controlApplication() {
           case DO:
           Serial.println(getState());
             if (m_flag_btnA_is_pressed) {
-              high_and_low_onemore=true;
+              highandlow.setContinue(ONEMORE);
               setStateMachine(HIGH_AND_LOW_RESULT, EXIT);
               setBtnAllFlgFalse();
             }
             if (m_flag_btnB_is_pressed) {
-              high_and_low_onemore=false;
+              highandlow.setContinue(BACK);
               setStateMachine(HIGH_AND_LOW_RESULT, EXIT);
               setBtnAllFlgFalse();
             }
@@ -863,8 +862,8 @@ void AppControl::controlApplication() {
 
           case EXIT:
           Serial.println(getState());
-            if(high_and_low_onemore==true){
-              high_and_low_onemore=false;
+            if(highandlow.getContinue()==ONEMORE){
+              highandlow.setContinue(BACK);
               setStateMachine(HIGH_AND_LOW_BATTLE, ENTRY);
             }else{
               setStateMachine(HIGH_AND_LOW_TITLE, ENTRY);

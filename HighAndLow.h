@@ -8,6 +8,11 @@ typedef enum {
     SMALL
 } HighLowSelect;
 
+typedef enum {
+    ONEMORE,
+    BACK
+} Continue;
+
 class HighAndLow // classの定義
 {
 private: // privateはクラス内からしかアクセスできない
@@ -17,6 +22,7 @@ private: // privateはクラス内からしかアクセスできない
     int m_win_count=0;
     int m_win_log=0;
     HighLowSelect m_select;
+    Continue m_continue;
 public: // publicはどこからでもアクセス可能
     int getLeftCard();
     void setLeftCard(int lc);
@@ -28,10 +34,13 @@ public: // publicはどこからでもアクセス可能
     void setWinCount(int wc);
     int getWinLog();
     void setWinLog(int wl);
-    void setSelect(HighLowSelect hls);
     HighLowSelect getSelect();
+    void setSelect(HighLowSelect hls);
+    Continue getContinue();
+    void setContinue(Continue cnt);
     int randomCard();
     void leftCard();
     void rightCard(); 
     void gameJudgement();
+    void writeWinLog ();
 };

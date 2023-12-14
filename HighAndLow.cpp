@@ -40,12 +40,20 @@ void HighAndLow::setWinLog(int wl){
     m_win_log=wl;
 }
 
+HighLowSelect HighAndLow::getSelect(){
+    return m_select;
+}
+
 void HighAndLow::setSelect(HighLowSelect hls){
     m_select=hls;
 }
 
-HighLowSelect HighAndLow::getSelect(){
-    return m_select;
+Continue HighAndLow::getContinue(){
+    return m_continue;
+}
+
+void HighAndLow::setContinue(Continue cnt){
+    m_continue=cnt;
 }
 
 int HighAndLow::randomCard(){  
@@ -72,6 +80,7 @@ void HighAndLow::gameJudgement(){
             setWinCount(wincount);
         }else if(getSelect()==BIG){
             setWinJudgement(false);
+            setWinLog(getWinCount());
         }else{    
         }
     }
@@ -82,7 +91,15 @@ void HighAndLow::gameJudgement(){
             setWinCount(wincount);
         }else if(getSelect()==SMALL){
             setWinJudgement(false);
+            setWinLog(getWinCount());
         }else{    
         }
+    }
+}
+
+
+void HighAndLow::writeWinLog (){
+    if(getWinJudgement()){
+        
     }
 }

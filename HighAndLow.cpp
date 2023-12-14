@@ -3,6 +3,6 @@
 int HighAndLow::RandomCard(){
     
     randomSeed(analogRead(0));
-    int randNumber = random(0, 8);
+    int randNumber = random(0, 9);
     return randNumber;    
 }

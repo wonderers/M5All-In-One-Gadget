@@ -325,8 +325,10 @@ void AppControl::displayHighAndLowInit() {
 void AppControl::displayHighAndLowBattle() {
   mlcd.clearDisplay();
   mlcd.fillBackgroundWhite();
+  highandlow.leftCard();
+  highandlow.rightCard();
   mlcd.displayJpgImageCoordinate(HIGHANDLOW_HIGHANDLOW_IMG_PATH, HIGHANDLOW_HIGHANDLOW_X_CRD, HIGHANDLOW_HIGHANDLOW_Y_CRD);
-  mlcd.displayJpgImageCoordinate(g_str_heart[highandlow.RandomCard()], HIGHANDLOW_LEFTCARD_X_CRD, HIGHANDLOW_LEFTCARD_Y_CRD);
+  mlcd.displayJpgImageCoordinate(g_str_heart[highandlow.getLeftCard()], HIGHANDLOW_LEFTCARD_X_CRD, HIGHANDLOW_LEFTCARD_Y_CRD);
   mlcd.displayJpgImageCoordinate(HIGHANDLOW_BACK_IMG_PATH, HIGHANDLOW_RIGHTCARD_X_CRD, HIGHANDLOW_RIGHTCARD_Y_CRD);
   mlcd.displayJpgImageCoordinate(HIGHANDLOW_HIGH_IMG_PATH, HIGHANDLOW_HIGH_X_CRD, HIGHANDLOW_HIGH_Y_CRD);
   mlcd.displayJpgImageCoordinate(HIGHANDLOW_LOW_IMG_PATH, HIGHANDLOW_LOW_X_CRD, HIGHANDLOW_LOW_Y_CRD);
@@ -335,10 +337,14 @@ void AppControl::displayHighAndLowBattle() {
 void AppControl::displayHighAndLowResult() {
   mlcd.clearDisplay();
   mlcd.fillBackgroundWhite();
-  mlcd.displayJpgImageCoordinate(HIGHANDLOW_WIN_IMG_PATH, HIGHANDLOW_WIN_X_CRD, HIGHANDLOW_WIN_Y_CRD);
-  //mlcd.displayJpgImageCoordinate(HIGHANDLOW_LOSE_IMG_PATH, HIGHANDLOW_LOSE_X_CRD, HIGHANDLOW_LOSE_Y_CRD);
-  mlcd.displayJpgImageCoordinate(g_str_heart[highandlow.RandomCard()], HIGHANDLOW_LEFTCARD_X_CRD, HIGHANDLOW_LEFTCARD_Y_CRD);
-  mlcd.displayJpgImageCoordinate(g_str_spade[2], HIGHANDLOW_RIGHTCARD_X_CRD, HIGHANDLOW_RIGHTCARD_Y_CRD);
+  highandlow.gameJudgement();
+  if(highandlow.getWinJudgement()){
+    mlcd.displayJpgImageCoordinate(HIGHANDLOW_WIN_IMG_PATH, HIGHANDLOW_WIN_X_CRD, HIGHANDLOW_WIN_Y_CRD);
+  }else{
+    mlcd.displayJpgImageCoordinate(HIGHANDLOW_LOSE_IMG_PATH, HIGHANDLOW_LOSE_X_CRD, HIGHANDLOW_LOSE_Y_CRD);
+  }
+  mlcd.displayJpgImageCoordinate(g_str_heart[highandlow.getLeftCard()], HIGHANDLOW_LEFTCARD_X_CRD, HIGHANDLOW_LEFTCARD_Y_CRD);
+  mlcd.displayJpgImageCoordinate(g_str_spade[highandlow.getRightCard()], HIGHANDLOW_RIGHTCARD_X_CRD, HIGHANDLOW_RIGHTCARD_Y_CRD);
   mlcd.displayJpgImageCoordinate(HIGHANDLOW_ONEMORE_IMG_PATH, HIGHANDLOW_ONEMORE_X_CRD, HIGHANDLOW_ONEMORE_Y_CRD);
   mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, HIGHANDLOW_BACK_X_CRD, HIGHANDLOW_BACK_Y_CRD);
 }
@@ -346,7 +352,7 @@ void AppControl::displayHighAndLowResult() {
 void AppControl::displayHighAndLowRecord() {
   mlcd.clearDisplay();
   mlcd.fillBackgroundWhite();
-  mlcd.displayText("123456", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD); 
+  mlcd.displayText("1234567", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD); 
   mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, HIGHANDLOW_BACK_X_CRD, HIGHANDLOW_BACK_Y_CRD); 
 }
 
@@ -811,10 +817,12 @@ void AppControl::controlApplication() {
           case DO:
           Serial.println(getState());
             if (m_flag_btnA_is_pressed) {
+              highandlow.setSelect(BIG);
               setStateMachine(HIGH_AND_LOW_BATTLE, EXIT);
               setBtnAllFlgFalse();
             }
             if (m_flag_btnC_is_pressed) {
+              highandlow.setSelect(SMALL);
               setStateMachine(HIGH_AND_LOW_BATTLE, EXIT);
               setBtnAllFlgFalse();
             }

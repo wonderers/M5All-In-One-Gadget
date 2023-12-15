@@ -352,13 +352,12 @@ void AppControl::displayHighAndLowResult() {
 void AppControl::displayHighAndLowRecord() {
   mlcd.clearDisplay();
   mlcd.fillBackgroundWhite();
-  mlcd.displayText("1234567", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD); 
+  highandlow.displayRecordLog();
   mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, HIGHANDLOW_BACK_X_CRD, HIGHANDLOW_BACK_Y_CRD); 
 }
 
 void AppControl::controlApplication() {
   bool music_stop_state = false;
-  int high_and_low_title_state=2;
   mmplay.init();
 
   while (1) {
@@ -410,10 +409,6 @@ void AppControl::controlApplication() {
         static int up_count;
         static int down_count;
           case DO:
-          if(up_count>2){
-            up_count=0;
-            down_count=0;
-          }
           if(down_count>2){
             up_count=0;
             down_count=0;
@@ -449,7 +444,7 @@ void AppControl::controlApplication() {
                 setBtnAllFlgFalse();
               }
               if (m_flag_btnB_is_pressed) {
-                if(up_count == 2){
+                if(up_count >= 2){
                   if(down_count == 2){
                     setFocusState(MENU_HIGH_AND_LOW);
                   }
@@ -731,17 +726,17 @@ void AppControl::controlApplication() {
           case DO:
           Serial.println(getState());
             if (m_flag_btnA_is_pressed) {
-              high_and_low_title_state=1;
+              highandlow.setHALTitleState(START);
               setStateMachine(HIGH_AND_LOW_TITLE, EXIT);
               setBtnAllFlgFalse();
             }
             if (m_flag_btnB_is_pressed) {
-              high_and_low_title_state=2;
+              highandlow.setHALTitleState(MENUBACK);
               setStateMachine(HIGH_AND_LOW_TITLE, EXIT);
               setBtnAllFlgFalse();
             }
             if (m_flag_btnC_is_pressed) {
-              high_and_low_title_state=3;
+              highandlow.setHALTitleState(RECORD);
               setStateMachine(HIGH_AND_LOW_TITLE, EXIT);
               setBtnAllFlgFalse();
             }
@@ -749,19 +744,18 @@ void AppControl::controlApplication() {
 
           case EXIT:
           Serial.println(getState());
-            switch(high_and_low_title_state){
-              case 1:
-                high_and_low_title_state=2;
+            switch(highandlow.getHALTitleState()){
+              case START:
+                highandlow.setHALTitleState(MENUBACK);
                 setStateMachine(HIGH_AND_LOW_BATTLE, ENTRY);
               break;
 
-              case 2:
-                high_and_low_title_state=2;
+              case MENUBACK:
                 setStateMachine(MENU, ENTRY);
               break;
 
-              case 3:
-                high_and_low_title_state=2;
+              case RECORD:
+                highandlow.setHALTitleState(MENUBACK);
                 setStateMachine(HIGH_AND_LOW_RECORD, ENTRY);
               break;
 

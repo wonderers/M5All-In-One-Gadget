@@ -2,6 +2,8 @@
 #pragma once
 #include <Arduino.h>
 #include <M5Stack.h>
+#include "MdDateTime.h"
+#include "M5All-In-One-Gadget.h"
 
 typedef enum {
     BIG,
@@ -13,9 +15,16 @@ typedef enum {
     BACK
 } Continue;
 
+typedef enum {
+    START,
+    MENUBACK,
+    RECORD
+} HALTitleState;
+
 class HighAndLow // classの定義
 {
 private: // privateはクラス内からしかアクセスできない
+    HALTitleState m_highandlow_title_state=MENUBACK;
     int m_left_card=0;
     int m_right_card=0;
     bool m_win_judgement;
@@ -24,6 +33,8 @@ private: // privateはクラス内からしかアクセスできない
     HighLowSelect m_select;
     Continue m_continue;
 public: // publicはどこからでもアクセス可能
+    HALTitleState getHALTitleState();
+    void setHALTitleState(HALTitleState hts);
     int getLeftCard();
     void setLeftCard(int lc);
     int getRightCard();
@@ -43,4 +54,7 @@ public: // publicはどこからでもアクセス可能
     void rightCard(); 
     void gameJudgement();
     void writeWinLog ();
+    String createWinLog();
+    void displayRecordText(String text, int x, int y);
+    void displayRecordLog();
 };

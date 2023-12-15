@@ -1,5 +1,15 @@
 #include "HighAndLow.h"
 
+MdDateTime halmdtime;
+
+HALTitleState HighAndLow::getHALTitleState(){
+    return m_highandlow_title_state;
+}
+
+void HighAndLow::setHALTitleState(HALTitleState hts){
+    m_highandlow_title_state=hts;
+}
+
 int HighAndLow::getLeftCard() {
   return m_left_card;
 }
@@ -81,6 +91,7 @@ void HighAndLow::gameJudgement(){
         }else if(getSelect()==BIG){
             setWinJudgement(false);
             setWinLog(getWinCount());
+            setWinCount(0);
         }else{    
         }
     }
@@ -92,14 +103,43 @@ void HighAndLow::gameJudgement(){
         }else if(getSelect()==SMALL){
             setWinJudgement(false);
             setWinLog(getWinCount());
+            setWinCount(0);
         }else{    
         }
     }
 }
 
-
 void HighAndLow::writeWinLog (){
     if(getWinJudgement()){
-        
+        if(getContinue()==BACK){
+            
+        }
+    }else{
+
     }
 }
+
+String HighAndLow::createWinLog(){
+    String stringdate=String(halmdtime.readDate());
+    String stringtime=String(halmdtime.readTime());
+    String stringwinlog=String(getWinLog());
+    String stringsentence=String("straight wins");
+    String history=String(stringdate+" "+stringtime+" "+stringwinlog+" "+stringsentence);
+    return history;
+}
+
+void HighAndLow::displayRecordText(String text, int x, int y)
+{
+    M5.Lcd.setCursor(x, y);
+    M5.Lcd.setTextColor(0x0000, 0xFFFF);
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.print(text);
+}
+
+void HighAndLow::displayRecordLog(){
+    for(int i=0 ; i<10 ;i++){
+        displayRecordText(createWinLog(), HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD+(i*10));
+    }
+}
+
+  

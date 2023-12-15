@@ -352,7 +352,8 @@ void AppControl::displayHighAndLowResult() {
 void AppControl::displayHighAndLowRecord() {
   mlcd.clearDisplay();
   mlcd.fillBackgroundWhite();
-  highandlow.displayRecordLog();
+  highandlow.writesd();
+  highandlow.readsd();
   mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, HIGHANDLOW_BACK_X_CRD, HIGHANDLOW_BACK_Y_CRD); 
 }
 

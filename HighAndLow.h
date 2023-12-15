@@ -4,6 +4,7 @@
 #include <M5Stack.h>
 #include "MdDateTime.h"
 #include "M5All-In-One-Gadget.h"
+#include "CSV_Parser.h"
 
 typedef enum {
     BIG,
@@ -57,4 +58,6 @@ public: // publicはどこからでもアクセス可能
     String createWinLog();
     void displayRecordText(String text, int x, int y);
     void displayRecordLog();
+    void writesd();
+    void readsd();
 };

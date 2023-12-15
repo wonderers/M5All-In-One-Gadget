@@ -142,4 +142,46 @@ void HighAndLow::displayRecordLog(){
     }
 }
 
+void HighAndLow::writesd(){
+    M5.begin();
+    File myFile = SD.open("/record.txt", FILE_WRITE);
+      if (myFile) {
+            myFile.print(createWinLog());
+        } else {
+            displayRecordText("error opening record.txt", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD);
+        }
+        myFile.close();
+}
+
+
+void HighAndLow::readsd(){
+    M5.begin();
+  M5.Lcd.setTextSize(1);
+  // ファイルオープン
+  File myFile = SD.open("/record.txt");
   
+  if (myFile) {
+    unsigned int auiSize = 0;
+    unsigned int auiCnt = 0;
+    auiSize = myFile.size();
+    // サイズ分ループ
+    for( auiCnt = 0; auiCnt < auiSize; auiCnt++ )
+    {
+      // ファイルの中身を表示
+      myFile.seek(auiCnt);
+      M5.Lcd.printf("%c",myFile.read());
+    }
+    // ファイルクローズ   
+    myFile.close();
+  } else {
+    displayRecordText("File open error record.txt", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD);
+  }
+    /*
+    M5.begin();
+    File myFile = SD.open("/record.txt", FILE_READ);
+    while (myFile.available()) {
+      displayRecordText(myFile.read(), HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD);
+    }
+    myFile.close();
+    */
+}

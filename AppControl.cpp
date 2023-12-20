@@ -352,7 +352,6 @@ void AppControl::displayHighAndLowResult() {
 void AppControl::displayHighAndLowRecord() {
   mlcd.clearDisplay();
   mlcd.fillBackgroundWhite();
-  highandlow.writesd();
   highandlow.readsd();
   mlcd.displayJpgImageCoordinate(COMMON_BUTTON_BACK_IMG_PATH, HIGHANDLOW_BACK_X_CRD, HIGHANDLOW_BACK_Y_CRD); 
 }
@@ -850,6 +849,7 @@ void AppControl::controlApplication() {
             }
             if (m_flag_btnB_is_pressed) {
               highandlow.setContinue(BACK);
+              highandlow.writesd();
               setStateMachine(HIGH_AND_LOW_RESULT, EXIT);
               setBtnAllFlgFalse();
             }

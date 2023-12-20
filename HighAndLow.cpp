@@ -143,22 +143,77 @@ void HighAndLow::displayRecordLog(){
 }
 
 void HighAndLow::writesd(){
-    M5.begin();
-    File myFile = SD.open("/record.txt", FILE_WRITE);
+  if(!(SD.exists("/record.csv"))){
+        File myFile = SD.open("/record.csv", FILE_WRITE);
       if (myFile) {
-            myFile.print(createWinLog());
+            myFile.print("my_date,my_time,my_winlog,my_string\n");
+            myFile.print(halmdtime.readDate());
+            myFile.print(",");
+            myFile.print(halmdtime.readTime());
+            myFile.print(",");
+            myFile.print(getWinLog());
+            myFile.print(",");
+            myFile.print("straight wins");
+            myFile.print("\n");
         } else {
-            displayRecordText("error opening record.txt", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD);
+            displayRecordText("error opening record.csv", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD);
         }
         myFile.close();
+  }else{
+      File myFile = SD.open("/record.csv", FILE_APPEND);
+      if (myFile) {
+            myFile.print(halmdtime.readDate());
+            myFile.print(",");
+            myFile.print(halmdtime.readTime());
+            myFile.print(",");
+            myFile.print(getWinLog());
+            myFile.print(",");
+            myFile.print("straight wins");
+            myFile.print("\n");
+        } else {
+            displayRecordText("error opening record.csv", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD);
+        }
+        myFile.close();
+  }
 }
 
-
 void HighAndLow::readsd(){
-    M5.begin();
   M5.Lcd.setTextSize(1);
+  M5.Lcd.setCursor(0, 0);
+  M5.Lcd.setTextColor(0x0000, 0xFFFF);
+  M5.Lcd.fillScreen(WHITE);
+
+/*
+CSV_Parser cp("sLdcfx-");
+
+  File fp = SD.open("/record.csv", FILE_READ);
+  if(!fp) {
+    M5.Lcd.println("File open error.");
+  } else {
+    while(fp.available()) {
+      cp << (char)fp.read();
+    }   
+    fp.close();
+  }
+
+  int32_t *date =(int32_t*)cp["my_date"];
+  int32_t *time =(int32_t*)cp["my_time"];
+  int32_t *winlog =(int32_t*)cp["my_winlog"];
+  char    **strings =(char**)cp["my_string"];
+
+  for (int i = 0; i < cp.getRowsCount(); i++) {
+    M5.Lcd.print(date[i], DEC);
+    M5.Lcd.print(" ");
+    M5.Lcd.print(time[i], DEC);
+    M5.Lcd.print(" ");
+    M5.Lcd.print(winlog[i], DEC);
+    M5.Lcd.print(" ");
+    M5.Lcd.println(strings[i]);
+  }
+}
+*/
   // ファイルオープン
-  File myFile = SD.open("/record.txt");
+  File myFile = SD.open("/record.csv");
   
   if (myFile) {
     unsigned int auiSize = 0;
@@ -169,19 +224,12 @@ void HighAndLow::readsd(){
     {
       // ファイルの中身を表示
       myFile.seek(auiCnt);
+      //displayRecordText(myFile.read(),0,0);
       M5.Lcd.printf("%c",myFile.read());
     }
     // ファイルクローズ   
     myFile.close();
   } else {
-    displayRecordText("File open error record.txt", HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD);
+    M5.Lcd.print("File open error record.csv");
   }
-    /*
-    M5.begin();
-    File myFile = SD.open("/record.txt", FILE_READ);
-    while (myFile.available()) {
-      displayRecordText(myFile.read(), HIGHANDLOW_RECORD_TEXT_X_CRD, HIGHANDLOW_RECORD_TEXT_Y_CRD);
-    }
-    myFile.close();
-    */
 }
